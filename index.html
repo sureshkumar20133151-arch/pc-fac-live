@@ -320,7 +320,8 @@
       padding: 30px; border-left: 4px solid transparent; transition: border-color 0.3s;
     }
     .config-step.active { border-left-color: var(--orange); }
-    .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .step-header { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; cursor: pointer; position: relative; }
+    .step-header::after { content: '▼'; position: absolute; right: 0; color: var(--silver); display: none; transition: transform 0.3s; font-size: 14px; }
     .step-num {
       width: 32px; height: 32px; background: rgba(255,255,255,0.1);
       display: flex; align-items: center; justify-content: center;
@@ -328,7 +329,7 @@
     }
     /* Brand Partners Section */
   .partners-section {
-    padding: 100px 0 60px; background: var(--bg);
+    padding: 100px 0 60px; background: var(--black2);
     overflow: hidden; position: relative;
     display: flex; flex-direction: column; align-items: center;
     border-top: 1px solid rgba(255,255,255,0.05);
@@ -375,6 +376,7 @@
     .radio-card input { display: none; }
     .radio-card:hover { border-color: rgba(255,255,255,0.3); }
     .radio-card.selected { border-color: var(--orange); background: rgba(255,107,26,0.05); }
+    .radio-card.selected .rc-label::after { content: ' ✓'; color: var(--orange); font-weight: bold; margin-left: 4px; }
     .rc-label { font-size: 15px; }
     .rc-price { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--silver); }
     
@@ -705,7 +707,27 @@
       .tiers-grid, .p-grid { grid-template-columns: repeat(2, 1fr); }
       .config-layout, .emi-layout, .sp-top { flex-direction: column; }
       .config-form, .config-summary, .emi-calc, .emi-options, .rating-wid, .reviews-list { width: 100%; }
-      .config-summary { position: relative; top: 0; }
+      .config-summary { 
+        position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000;
+        margin: 0; padding: 0; box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
+      }
+      .summary-card { padding: 16px 20px; border-radius: 20px 20px 0 0; border: none; border-top: 3px solid var(--orange); background: var(--black2); }
+      .summary-title, .summary-lines, .summary-extras { display: none; }
+      .summary-total { border-top: none; padding-top: 0; margin-top: 0; margin-bottom: 12px; }
+      .total-lbl { font-size: 11px; }
+      .total-val { font-size: 32px; }
+      .summary-ctas { margin-top: 0; flex-direction: row; gap: 10px; }
+      .btn-wa-order { padding: 12px 16px; font-size: 13px; }
+      .summary-btn { padding: 12px 16px; font-size: 12px; }
+      
+      .config-step { padding: 20px; overflow: hidden; }
+      .radio-grid.part-selector, #step-usecase { display: none; }
+      .config-step.open .radio-grid.part-selector, .config-step.open #step-usecase { display: grid; margin-top: 16px; }
+      .step-header { margin-bottom: 0; }
+      .config-step.open .step-header { margin-bottom: 20px; }
+      .step-header::after { display: block; }
+      .config-step.open .step-header::after { transform: rotate(180deg); }
+      
       .gallery-layout { flex-direction: column; }
       .gall-left, .gall-right { width: 100%; }
       .ft-grid { grid-template-columns: repeat(2, 1fr); gap: 40px; }
@@ -774,7 +796,6 @@
     .brand-logo--corsair { font-weight: 800; font-size: 1rem; letter-spacing: 0.22em; }
     .brand-logo--asus { font-weight: 900; font-size: 1.4rem; letter-spacing: 0.2em; }
     @media (max-width: 768px) { .brand-item { width: 140px; height: 80px; } .brands-track { gap: 16px; } }
-  /* CSS_PLACEHOLDER_4 */
   
     .brand-logo--asusrog { font-weight: 800; font-size: 1.2rem; letter-spacing: 0.1em; color: #ff0000; }
     .brand-logo--gigabyte { font-weight: 800; font-size: 1.3rem; letter-spacing: 0.15em; }
@@ -852,8 +873,8 @@
       <a href="#tiers" class="drawer-link hover-target">Builds</a>
       <a href="#configurator" class="drawer-link hover-target">Configure</a>
       <a href="#gallery" class="drawer-link hover-target">Gallery</a>
-      <a href="#about" class="drawer-link hover-target">About</a>
-      <a href="#contact" class="drawer-link hover-target">Contact</a>
+      <a href="#footer" class="drawer-link hover-target">About</a>
+      <a href="#footer" class="drawer-link hover-target">Contact</a>
     </div>
     <a href="https://wa.me/919361599097" class="btn-wa hover-target" style="width: max-content; margin-top: auto;">
       <svg class="wa-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z M11.999 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2.004 22l4.974-1.418A9.953 9.953 0 0012 21.999c5.523 0 10-4.477 10-10S17.522 2 12 2zm0 18.5a8.5 8.5 0 01-4.504-1.285l-.324-.193-3.36.957.977-3.263-.211-.335A8.5 8.5 0 1120.5 12a8.51 8.51 0 01-8.501 8.5z"/></svg>
@@ -922,63 +943,59 @@
 </section>
 
 
-  <!-- Section 3 - Build Tiers -->
-  <section class="build-tiers" id="tiers">
-    <div class="section-header reveal">
-      <div class="tag">Choose Your Power Level</div>
+  <!-- Section 10 - Brand Partners -->
+  <section id="brands" class="partners" style="padding: 120px 0; overflow: hidden; text-align: center;">
+    <div class="reveal" style="padding: 0 40px;">
+      <div class="tag">TRUSTED BY THE BEST</div>
+      <h2 class="section-title" style="margin-top: 20px;">Our Brand Partners</h2>
     </div>
-    <div class="tiers-grid reveal">
-      <!-- Tier 1 -->
-      <div class="tier-card hover-target">
-        <div class="tier-price">₹55K</div>
-        <div class="tier-price-label">Starting Price</div>
-        <h3 class="tier-title">STARTER BEAST</h3>
-        <p class="tier-target">Office + light gaming</p>
-        <ul class="tier-specs">
-          <li><span>GPU</span><span>RTX 4060 / RX 7600</span></li>
-          <li><span>CPU</span><span>i5-13400F / Ryzen 5</span></li>
-          <li><span>RAM</span><span>16GB DDR5</span></li>
-          <li><span>Storage</span><span>512GB NVMe</span></li>
-          <li><span>Cooling</span><span>Air Cooler</span></li>
-        </ul>
-        <a href="#configurator" class="btn-ghost" style="width:100%; text-align:center;">Configure This Build →</a>
+    <div class="brands-marquee reveal">
+      <div class="brands-track">
+
+        <div class="brand-item"><span class="brand-logo brand-logo--nvidia">NVIDIA</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--intel">intel</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--amd">AMD</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--asusrog">ASUS ROG</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--nzxt">NZXT</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--corsair">CORSAIR</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--deepcool">DeepCool</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--gskill">G.SKILL</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--samsung">SAMSUNG</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--wd">WD</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--msi">msi</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--gigabyte">GIGABYTE</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--coolermaster">COOLER<br/>MASTER</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--lianli">LIAN LI</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--zotac">ZOTAC</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--crucial">crucial</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--seagate">SEAGATE</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--thermaltake">thermaltake</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--phanteks">PHANTEKS</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--bequiet">be quiet!</span></div>
+<!-- Duplicate set for seamless loop -->
+        <div class="brand-item"><span class="brand-logo brand-logo--nvidia">NVIDIA</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--intel">intel</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--amd">AMD</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--asusrog">ASUS ROG</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--nzxt">NZXT</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--corsair">CORSAIR</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--deepcool">DeepCool</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--gskill">G.SKILL</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--samsung">SAMSUNG</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--wd">WD</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--msi">msi</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--gigabyte">GIGABYTE</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--coolermaster">COOLER<br/>MASTER</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--lianli">LIAN LI</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--zotac">ZOTAC</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--crucial">crucial</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--seagate">SEAGATE</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--thermaltake">thermaltake</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--phanteks">PHANTEKS</span></div>
+        <div class="brand-item"><span class="brand-logo brand-logo--bequiet">be quiet!</span></div>
+
+</div>
       </div>
-      <!-- Tier 2 -->
-      <div class="tier-card tier-popular hover-target">
-        <div class="tier-badge badge-pop">MOST POPULAR</div>
-        <div class="tier-price">₹1.5L</div>
-        <div class="tier-price-label">Starting Price</div>
-        <h3 class="tier-title">PRO BUILDER</h3>
-        <p class="tier-target">Streamers + 3D artists</p>
-        <ul class="tier-specs">
-          <li><span>GPU</span><span>RTX 4080 / RX 7900 XTX</span></li>
-          <li><span>CPU</span><span>i7-14700K / Ryzen 9</span></li>
-          <li><span>RAM</span><span>32GB DDR5</span></li>
-          <li><span>Storage</span><span>1TB NVMe Gen4</span></li>
-          <li><span>Cooling</span><span>240mm AIO Liquid</span></li>
-        </ul>
-        <a href="#configurator" class="btn-primary" style="width:100%; text-align:center;">Configure This Build →</a>
-      </div>
-      <!-- Tier 3 -->
-      <div class="tier-card hover-target">
-        <div class="tier-badge badge-nolimit">NO LIMITS</div>
-        <div class="tier-price">₹3.5L</div>
-        <div class="tier-price-label">Starting Price</div>
-        <h3 class="tier-title">ABSOLUTE BEAST</h3>
-        <p class="tier-target">VFX / 4K gaming / no compromise</p>
-        <ul class="tier-specs">
-          <li><span>GPU</span><span>RTX 4090 / RTX 5090</span></li>
-          <li><span>CPU</span><span>i9-14900K / Ryzen 9</span></li>
-          <li><span>RAM</span><span>64GB–128GB DDR5</span></li>
-          <li><span>Storage</span><span>2TB–4TB NVMe Gen5</span></li>
-          <li><span>Cooling</span><span>360mm AIO Liquid</span></li>
-        </ul>
-        <a href="#configurator" class="btn-ghost" style="width:100%; text-align:center;">Configure This Build →</a>
-      </div>
-    </div>
-    <div class="tier-footer-text reveal">
-      Not sure which tier? <a href="https://wa.me/919361599097?text=Hi!%20I%20need%20help%20choosing%20the%20right%20PC%20build." class="hover-target" target="_blank">→ WhatsApp us and we'll help you choose.</a><br><br>
-      <small>All builds include 2-year warranty + free delivery within Madurai</small>
     </div>
   </section>
 
@@ -991,7 +1008,7 @@
     <div class="config-layout">
       <div class="config-form reveal" id="config-form">
         <!-- Step 1: Use Case -->
-        <div class="config-step active">
+        <div class="config-step active open">
           <div class="step-header">
             <div class="step-num">1</div><div class="step-title">USE CASE</div>
           </div>
@@ -1009,6 +1026,7 @@
             <div class="step-num">2</div><div class="step-title">GRAPHICS CARD (GPU)</div>
           </div>
           <div class="radio-grid part-selector" data-cat="gpu">
+            <label class="radio-card hover-target"><input type="radio" name="gpu" value="Integrated Graphics"> <span class="rc-label">Integrated (iGPU)</span> <span class="rc-price">+₹0</span></label>
             <label class="radio-card hover-target"><input type="radio" name="gpu" value="RTX 4060"> <span class="rc-label">RTX 4060</span> <span class="rc-price">+₹25,000</span></label>
             <label class="radio-card hover-target"><input type="radio" name="gpu" value="RTX 4070"> <span class="rc-label">RTX 4070</span> <span class="rc-price">+₹45,000</span></label>
             <label class="radio-card hover-target selected"><input type="radio" name="gpu" value="RTX 4080" checked> <span class="rc-label">RTX 4080 (Rec)</span> <span class="rc-price">+₹80,000</span></label>
@@ -1022,9 +1040,10 @@
             <div class="step-num">3</div><div class="step-title">PROCESSOR (CPU)</div>
           </div>
           <div class="radio-grid part-selector" data-cat="cpu">
+            <label class="radio-card hover-target"><input type="radio" name="cpu" value="Intel i5-12400"> <span class="rc-label">Intel i5-12400 (iGPU)</span> <span class="rc-price">+₹12,000</span></label>
             <label class="radio-card hover-target"><input type="radio" name="cpu" value="Intel i5-13400F"> <span class="rc-label">Intel i5-13400F</span> <span class="rc-price">+₹15,000</span></label>
-            <label class="radio-card hover-target"><input type="radio" name="cpu" value="Intel i7-14700K"> <span class="rc-label">Intel i7-14700K</span> <span class="rc-price">+₹28,000</span></label>
-            <label class="radio-card hover-target selected"><input type="radio" name="cpu" value="Intel i9-14900K" checked> <span class="rc-label">Intel i9-14900K</span> <span class="rc-price">+₹45,000</span></label>
+            <label class="radio-card hover-target selected"><input type="radio" name="cpu" value="Intel i7-14700K" checked> <span class="rc-label">Intel i7-14700K</span> <span class="rc-price">+₹28,000</span></label>
+            <label class="radio-card hover-target"><input type="radio" name="cpu" value="Intel i9-14900K"> <span class="rc-label">Intel i9-14900K</span> <span class="rc-price">+₹45,000</span></label>
             <label class="radio-card hover-target"><input type="radio" name="cpu" value="Ryzen 9 7950X"> <span class="rc-label">Ryzen 9 7950X</span> <span class="rc-price">+₹48,000</span></label>
           </div>
         </div>
@@ -1069,10 +1088,10 @@
             <div class="step-num">7</div><div class="step-title">CHASSIS (CASE)</div>
           </div>
           <div class="radio-grid part-selector" data-cat="chassis">
-            <label class="radio-card hover-target"><input type="radio" name="chassis" value="Mid Tower Black"> <span class="rc-label">Mid Tower Black</span> <span class="rc-price">+₹4,000</span></label>
+            <label class="radio-card hover-target selected"><input type="radio" name="chassis" value="Mid Tower Black" checked> <span class="rc-label">Mid Tower Black</span> <span class="rc-price">+₹4,000</span></label>
             <label class="radio-card hover-target"><input type="radio" name="chassis" value="Mid Tower White"> <span class="rc-label">Mid Tower White</span> <span class="rc-price">+₹4,500</span></label>
             <label class="radio-card hover-target"><input type="radio" name="chassis" value="Full Tower Black"> <span class="rc-label">Full Tower Black</span> <span class="rc-price">+₹7,000</span></label>
-            <label class="radio-card hover-target selected"><input type="radio" name="chassis" value="Full Tower White" checked> <span class="rc-label">Full Tower White (Pop)</span> <span class="rc-price">+₹8,500</span></label>
+            <label class="radio-card hover-target"><input type="radio" name="chassis" value="Full Tower White"> <span class="rc-label">Full Tower White (Pop)</span> <span class="rc-price">+₹8,500</span></label>
             <label class="radio-card hover-target" style="grid-column: span 2;"><input type="radio" name="chassis" value="Premium Glass Case"> <span class="rc-label">Premium Glass Case</span> <span class="rc-price">+₹12,000</span></label>
           </div>
         </div>
@@ -1157,8 +1176,8 @@
         <div class="uc-card-content">
           <h3 class="uc-title">OFFICE POWERHOUSE</h3>
           <p class="uc-for">Tally · Excel · Teams · Zoom · ERP</p>
-          <p class="uc-specs">RTX 4060 | i5-13400F | 16GB DDR5<br>Silent air cooling | 5-year reliability<br>Fast boot, zero lag</p>
-          <div class="uc-price">From ₹58,000</div>
+          <p class="uc-specs">Intel iGPU | i5-12400 | 16GB DDR5<br>Silent air cooling | 5-year reliability<br>Fast boot, zero lag</p>
+          <div class="uc-price">From ₹35,000</div>
           <a href="#configurator" class="btn-ghost">Configure This Build →</a>
         </div>
       </div>
@@ -1173,126 +1192,280 @@
     </div>
     <div class="gallery-layout">
       <div class="gall-left reveal">
-        <ul class="stat-list">
+        <!-- 4.9★ Rating Widget -->
+        <div class="rate-big" style="font-family:'Outfit',sans-serif; font-weight:900; font-size:90px; color:var(--orange); line-height:1; margin-bottom:4px; letter-spacing:-4px;">4.9<span style="font-size:50px; vertical-align:super; letter-spacing:0;">★</span></div>
+        <div style="font-family:'DM Mono',monospace; font-size:11px; color:var(--silver); letter-spacing:2px; text-transform:uppercase; margin-bottom:28px;">Based on 89 verified reviews</div>
+        <div class="bars" style="display:flex; flex-direction:column; gap:10px; margin-bottom:32px;">
+          <div class="bar-line" style="display:flex; align-items:center; gap:10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--silver);">
+            <span style="width:22px;">5★</span><div class="bar-track" style="flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden;"><div class="bar-fill" style="width:82%; height:100%; background:linear-gradient(90deg,var(--orange),var(--orange2)); border-radius:3px;"></div></div><span style="width:30px; text-align:right;">82%</span>
+          </div>
+          <div class="bar-line" style="display:flex; align-items:center; gap:10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--silver);">
+            <span style="width:22px;">4★</span><div class="bar-track" style="flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden;"><div class="bar-fill" style="width:12%; height:100%; background:linear-gradient(90deg,var(--orange),var(--orange2)); border-radius:3px;"></div></div><span style="width:30px; text-align:right;">12%</span>
+          </div>
+          <div class="bar-line" style="display:flex; align-items:center; gap:10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--silver);">
+            <span style="width:22px;">3★</span><div class="bar-track" style="flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden;"><div class="bar-fill" style="width:4%; height:100%; background:linear-gradient(90deg,var(--orange),var(--orange2)); border-radius:3px;"></div></div><span style="width:30px; text-align:right;">4%</span>
+          </div>
+          <div class="bar-line" style="display:flex; align-items:center; gap:10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--silver);">
+            <span style="width:22px;">2★</span><div class="bar-track" style="flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden;"><div class="bar-fill" style="width:1%; height:100%; background:linear-gradient(90deg,var(--orange),var(--orange2)); border-radius:3px;"></div></div><span style="width:30px; text-align:right;">1%</span>
+          </div>
+          <div class="bar-line" style="display:flex; align-items:center; gap:10px; font-family:'DM Mono',monospace; font-size:11px; color:var(--silver);">
+            <span style="width:22px;">1★</span><div class="bar-track" style="flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden;"><div class="bar-fill" style="width:1%; height:100%; background:linear-gradient(90deg,var(--orange),var(--orange2)); border-radius:3px;"></div></div><span style="width:30px; text-align:right;">1%</span>
+          </div>
+        </div>
+        <ul class="stat-list" style="margin-top:0;">
           <li>127+ Builds Delivered</li>
-          <li>4.9 / 5.0 Average Rating</li>
           <li>15+ Cities Shipped</li>
           <li>2 Year Warranty on All Builds</li>
         </ul>
-        <div class="map-container">
-          <div class="map-dot dot-1"></div>
-          <div class="map-dot dot-2"></div>
-          <div class="map-dot dot-3"></div>
-          <div class="map-dot dot-4"></div>
-          <div class="map-dot dot-5"></div>
-        </div>
       </div>
+
       <div class="gall-right reveal">
         <div class="carousel" id="showcase-carousel">
           <!-- Card 1 -->
           <div class="gall-card">
             <div class="gall-img-wrap">
-              <img src="assets/hero_pc_1773861130923.png" alt="RTX 4090 Build" class="gall-img" onerror="this.parentElement.innerHTML='<div class=\'gall-img-placeholder\'><svg width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FF6B1A\' stroke-width=\'1\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M8 21h8M12 17v4\'/></svg><span>PHOTO COMING SOON</span></div>'">
+              <img src="assets/gallery_arjun.png" alt="RTX 4090 Build - Arjun M." class="gall-img">
             </div>
             <div class="gall-body">
+              <div class="gall-stars">★★★★★</div>
               <h4 class="gall-name">Arjun M.</h4>
               <div class="gall-city">Madurai</div>
+              <p class="gall-quote">"Cable routing is flawless. RTX 4090 hits 95fps in 4K Blender. Best money I've spent."</p>
               <span class="gall-spec">RTX 4090 | 64GB DDR5</span>
             </div>
           </div>
           <!-- Card 2 -->
           <div class="gall-card">
             <div class="gall-img-wrap">
-              <img src="assets/gaming_pc_1773861149425.png" alt="Gaming Build" class="gall-img" onerror="this.parentElement.innerHTML='<div class=\'gall-img-placeholder\'><svg width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FF6B1A\' stroke-width=\'1\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M8 21h8M12 17v4\'/></svg><span>PHOTO COMING SOON</span></div>'">
+              <img src="assets/gallery_priya.png" alt="RTX 4080 Build - Priya N." class="gall-img">
             </div>
             <div class="gall-body">
+              <div class="gall-stars">★★★★★</div>
               <h4 class="gall-name">Priya N.</h4>
               <div class="gall-city">Bangalore</div>
+              <p class="gall-quote">"Arrived in 6 days. DaVinci Resolve exports in half the time. WhatsApp support even after delivery."</p>
               <span class="gall-spec">RTX 4080 | 128GB DDR5</span>
             </div>
           </div>
           <!-- Card 3 -->
           <div class="gall-card">
             <div class="gall-img-wrap">
-              <img src="assets/creator_pc_1773861167239.png" alt="Creator Build" class="gall-img" onerror="this.parentElement.innerHTML='<div class=\'gall-img-placeholder\'><svg width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FF6B1A\' stroke-width=\'1\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M8 21h8M12 17v4\'/></svg><span>PHOTO COMING SOON</span></div>'">
+              <img src="assets/gallery_karthik.png" alt="RTX 4070 Build - Karthik R." class="gall-img">
             </div>
             <div class="gall-body">
+              <div class="gall-stars">★★★★★</div>
               <h4 class="gall-name">Karthik R.</h4>
               <div class="gall-city">Madurai</div>
+              <p class="gall-quote">"144fps on every game I play. Suresh helped me pick parts within my budget. Zero compromise."</p>
               <span class="gall-spec">RTX 4070 | 32GB DDR5</span>
             </div>
           </div>
           <!-- Card 4 -->
           <div class="gall-card">
             <div class="gall-img-wrap">
-              <img src="assets/vfx_pc_1773861184748.png" alt="VFX Build" class="gall-img" onerror="this.parentElement.innerHTML='<div class=\'gall-img-placeholder\'><svg width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FF6B1A\' stroke-width=\'1\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M8 21h8M12 17v4\'/></svg><span>PHOTO COMING SOON</span></div>'">
+              <img src="assets/gallery_rohan.png" alt="RTX 4060 Build - Rohan S." class="gall-img">
             </div>
             <div class="gall-body">
+              <div class="gall-stars">★★★★★</div>
               <h4 class="gall-name">Rohan S.</h4>
               <div class="gall-city">Mumbai</div>
+              <p class="gall-quote">"Price was ₹10K less than any store. Packaging was military grade. Not a scratch on it."</p>
               <span class="gall-spec">RTX 4060 | 16GB DDR5</span>
             </div>
           </div>
           <!-- Card 5 -->
           <div class="gall-card">
             <div class="gall-img-wrap">
-              <img src="assets/office_pc_1773861202549.png" alt="Office Build" class="gall-img" onerror="this.parentElement.innerHTML='<div class=\'gall-img-placeholder\'><svg width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FF6B1A\' stroke-width=\'1\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M8 21h8M12 17v4\'/></svg><span>PHOTO COMING SOON</span></div>'">
+              <img src="assets/gallery_vikram.png" alt="RTX 5090 Build - Vikram I." class="gall-img">
             </div>
             <div class="gall-body">
+              <div class="gall-stars">★★★★★</div>
               <h4 class="gall-name">Vikram I.</h4>
               <div class="gall-city">Hyderabad</div>
+              <p class="gall-quote">"RTX 5090 beast. Runs AI training and 4K gaming simultaneously. Second build from Uniq Craft."</p>
               <span class="gall-spec">RTX 5090 | 128GB DDR5</span>
             </div>
           </div>
           <!-- Card 6 -->
           <div class="gall-card">
             <div class="gall-img-wrap">
-              <img src="assets/hero_pc_1773861130923.png" alt="VFX Workstation" class="gall-img" onerror="this.parentElement.innerHTML='<div class=\'gall-img-placeholder\'><svg width=\'40\' height=\'40\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23FF6B1A\' stroke-width=\'1\'><rect x=\'2\' y=\'3\' width=\'20\' height=\'14\' rx=\'2\'/><path d=\'M8 21h8M12 17v4\'/></svg><span>PHOTO COMING SOON</span></div>'">
+              <img src="assets/gallery_sneha.png" alt="VFX Workstation - Sneha P." class="gall-img">
             </div>
             <div class="gall-body">
+              <div class="gall-stars">★★★★★</div>
               <h4 class="gall-name">Sneha P.</h4>
               <div class="gall-city">Coimbatore</div>
+              <p class="gall-quote">"3D workstation for Houdini FX. Simulations that took 6 hours now finish in 40 minutes."</p>
               <span class="gall-spec">RTX 4090 | 128GB DDR5</span>
             </div>
           </div>
           <!-- Duplicate set for seamless carousel -->
           <div class="gall-card">
-            <div class="gall-img-wrap"><div class="gall-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FF6B1A" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>PHOTO COMING SOON</span></div></div>
-            <div class="gall-body"><h4 class="gall-name">Arjun M.</h4><div class="gall-city">Madurai</div>
+            <div class="gall-img-wrap"><img src="assets/gallery_arjun.png" alt="RTX 4090 - Arjun M." class="gall-img"></div>
+            <div class="gall-body"><div class="gall-stars">★★★★★</div><h4 class="gall-name">Arjun M.</h4><div class="gall-city">Madurai</div>
+              <p class="gall-quote">"Cable routing is flawless. RTX 4090 hits 95fps in 4K Blender. Best money I've spent."</p>
               <span class="gall-spec">RTX 4090 | 64GB DDR5</span></div>
           </div>
           <div class="gall-card">
-            <div class="gall-img-wrap"><div class="gall-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FF6B1A" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>PHOTO COMING SOON</span></div></div>
-            <div class="gall-body"><h4 class="gall-name">Priya N.</h4><div class="gall-city">Bangalore</div>
+            <div class="gall-img-wrap"><img src="assets/gallery_priya.png" alt="RTX 4080 - Priya N." class="gall-img"></div>
+            <div class="gall-body"><div class="gall-stars">★★★★★</div><h4 class="gall-name">Priya N.</h4><div class="gall-city">Bangalore</div>
+              <p class="gall-quote">"Arrived in 6 days. DaVinci Resolve exports in half the time. WhatsApp support even after delivery."</p>
               <span class="gall-spec">RTX 4080 | 128GB DDR5</span></div>
           </div>
           <div class="gall-card">
-            <div class="gall-img-wrap"><div class="gall-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FF6B1A" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>PHOTO COMING SOON</span></div></div>
-            <div class="gall-body"><h4 class="gall-name">Karthik R.</h4><div class="gall-city">Madurai</div>
+            <div class="gall-img-wrap"><img src="assets/gallery_karthik.png" alt="RTX 4070 - Karthik R." class="gall-img"></div>
+            <div class="gall-body"><div class="gall-stars">★★★★★</div><h4 class="gall-name">Karthik R.</h4><div class="gall-city">Madurai</div>
+              <p class="gall-quote">"144fps on every game I play. Suresh helped me pick parts within my budget. Zero compromise."</p>
               <span class="gall-spec">RTX 4070 | 32GB DDR5</span></div>
           </div>
           <div class="gall-card">
-            <div class="gall-img-wrap"><div class="gall-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FF6B1A" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>PHOTO COMING SOON</span></div></div>
-            <div class="gall-body"><h4 class="gall-name">Rohan S.</h4><div class="gall-city">Mumbai</div>
+            <div class="gall-img-wrap"><img src="assets/gallery_rohan.png" alt="RTX 4060 - Rohan S." class="gall-img"></div>
+            <div class="gall-body"><div class="gall-stars">★★★★★</div><h4 class="gall-name">Rohan S.</h4><div class="gall-city">Mumbai</div>
+              <p class="gall-quote">"Price was ₹10K less than any store. Packaging was military grade. Not a scratch on it."</p>
               <span class="gall-spec">RTX 4060 | 16GB DDR5</span></div>
           </div>
           <div class="gall-card">
-            <div class="gall-img-wrap"><div class="gall-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FF6B1A" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>PHOTO COMING SOON</span></div></div>
-            <div class="gall-body"><h4 class="gall-name">Vikram I.</h4><div class="gall-city">Hyderabad</div>
+            <div class="gall-img-wrap"><img src="assets/gallery_vikram.png" alt="RTX 5090 - Vikram I." class="gall-img"></div>
+            <div class="gall-body"><div class="gall-stars">★★★★★</div><h4 class="gall-name">Vikram I.</h4><div class="gall-city">Hyderabad</div>
+              <p class="gall-quote">"RTX 5090 beast. Runs AI training and 4K gaming simultaneously. Second build from Uniq Craft."</p>
               <span class="gall-spec">RTX 5090 | 128GB DDR5</span></div>
           </div>
           <div class="gall-card">
-            <div class="gall-img-wrap"><div class="gall-img-placeholder"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#FF6B1A" stroke-width="1"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg><span>PHOTO COMING SOON</span></div></div>
-            <div class="gall-body"><h4 class="gall-name">Sneha P.</h4><div class="gall-city">Coimbatore</div>
+            <div class="gall-img-wrap"><img src="assets/gallery_sneha.png" alt="VFX - Sneha P." class="gall-img"></div>
+            <div class="gall-body"><div class="gall-stars">★★★★★</div><h4 class="gall-name">Sneha P.</h4><div class="gall-city">Coimbatore</div>
+              <p class="gall-quote">"3D workstation for Houdini FX. Simulations that took 6 hours now finish in 40 minutes."</p>
               <span class="gall-spec">RTX 4090 | 128GB DDR5</span></div>
           </div>
         </div>
       </div>
     </div>
-    <div class="reveal" style="text-align: center; margin-top: 60px;">
+    <!-- Customer Reviews Marquee -->
+    <div class="reveal" style="margin-top: 60px; overflow: hidden; position: relative;
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);
+      mask-image: linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%);">
+      <div style="display:flex; gap:20px; width:max-content; animation: marquee-scroll 40s linear infinite;">
+
+        <!-- Review 1 -->
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"RTX 4080 build arrived in 5 days to Chennai. Perfectly cable managed — looks better than any YouTube build I've seen. Benchmarks are insane."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Raj K.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Chennai · RTX 4080</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+
+        <!-- Review 2 -->
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"I was comparing 4 builders. Suresh responded on WhatsApp at 11pm. Answered every question. The Ryzen 9 workstation arrived safely. Houdini runs 3x faster."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Meena S.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Bangalore · Ryzen 9 + RTX 4090</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+
+        <!-- Review 3 -->
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"Got a gaming PC for my son's 18th birthday. RTX 4070, runs everything at 144fps. Price was ₹12,000 less than Flipkart for the same specs. Packaging was military grade."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Sundar P.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Chennai · RTX 4070</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+
+        <!-- Review 4 -->
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"Second build I've ordered from Uniq Craft. First in 2024, this one in 2026. Both delivered flawlessly. i9-14900K + RTX 4090, no throttling under full load for hours."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Dhruv M.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Coimbatore · i9 + RTX 4090</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+
+        <!-- Review 5 -->
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"Video editing rig for my YouTube channel. DaVinci Resolve exports in half the time compared to my old system. White full tower with RGB — looks stunning on camera too."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Arun V.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Hyderabad · RTX 4080 + i7</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+
+        <!-- Review 6 -->
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"Ordered office PC for my CA firm — 5 machines total. Each one identical, all delivered within 7 days. GST invoices ready. Zero issues after 3 months of daily use."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Nisha T.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Mumbai · Office Build x5</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+
+        <!-- Duplicate set for seamless loop -->
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"RTX 4080 build arrived in 5 days to Chennai. Perfectly cable managed — looks better than any YouTube build I've seen. Benchmarks are insane."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Raj K.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Chennai · RTX 4080</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"I was comparing 4 builders. Suresh responded on WhatsApp at 11pm. Answered every question. The Ryzen 9 workstation arrived safely. Houdini runs 3x faster."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Meena S.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Bangalore · Ryzen 9 + RTX 4090</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+        <div style="min-width:320px; background:var(--black3); border:1px solid var(--border); border-left:3px solid var(--orange); padding:24px 28px; position:relative; flex-shrink:0;">
+          <div style="color:#FFD700; font-size:13px; letter-spacing:2px; margin-bottom:12px;">★★★★★</div>
+          <p style="font-size:13px; color:var(--white); line-height:1.7; margin-bottom:16px; font-style:italic;">"Got a gaming PC for my son's 18th birthday. RTX 4070, runs everything at 144fps. Price was ₹12,000 less than Flipkart for the same specs. Packaging was military grade."</p>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-family:'DM Mono',monospace; font-size:12px; color:var(--white); font-weight:bold;">Sundar P.</div>
+              <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); text-transform:uppercase; letter-spacing:2px;">Chennai · RTX 4070</div>
+            </div>
+            <div style="font-family:'DM Mono',monospace; font-size:10px; color:var(--orange); letter-spacing:1px;">✓ Verified</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="reveal" style="text-align: center; margin-top: 48px;">
       <p style="color: var(--silver); margin-bottom: 20px;">Want your build featured here?</p>
       <a href="https://wa.me/919361599097" class="btn-ghost">Share Your Setup →</a>
     </div>
+
   </section>
   <!-- Section 7 - How It Works -->
   <section class="how-it-works">
@@ -1332,139 +1505,6 @@
     </div>
   </section>
 
-
-
-  <!-- Section 9 - Social Proof & Trust -->
-  <section class="social-proof">
-    <div class="sp-top">
-      <div class="rating-wid reveal">
-        <div class="rate-big">4.9<span>★</span></div>
-        <div class="rate-count">Based on 89 verified reviews</div>
-        <div class="bars">
-          <div class="bar-line"><span>5★</span><div class="bar-track"><div class="bar-fill" style="width: 82%;"></div></div><span class="bar-pct">82%</span></div>
-          <div class="bar-line"><span>4★</span><div class="bar-track"><div class="bar-fill" style="width: 12%;"></div></div><span class="bar-pct">12%</span></div>
-          <div class="bar-line"><span>3★</span><div class="bar-track"><div class="bar-fill" style="width: 4%;"></div></div><span class="bar-pct">4%</span></div>
-          <div class="bar-line"><span>2★</span><div class="bar-track"><div class="bar-fill" style="width: 1%;"></div></div><span class="bar-pct">1%</span></div>
-          <div class="bar-line"><span>1★</span><div class="bar-track"><div class="bar-fill" style="width: 1%;"></div></div><span class="bar-pct">1%</span></div>
-        </div>
-      </div>
-      <div class="reviews-list reveal">
-        <div class="rev-card">
-          <div class="rev-stars">★★★★★</div>
-          <p class="rev-quote">"Ordered a Ryzen 9 + RTX 4090 workstation. Uniq Craft did the cable management better than any pre-built I've seen. Blender renders are 3x faster than my old system."</p>
-          <div class="rev-footer">
-            <div class="rev-author">Raj K. · Chennai</div>
-            <div class="rev-verified">✓ Verified</div>
-          </div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-stars">★★★★★</div>
-          <p class="rev-quote">"WhatsApp response time is incredible. They answered all my questions at 11pm. Build arrived in 6 days to Bangalore. Perfection."</p>
-          <div class="rev-footer">
-            <div class="rev-author">Meena S. · Bangalore</div>
-            <div class="rev-verified">✓ Verified</div>
-          </div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-stars">★★★★★</div>
-          <p class="rev-quote">"Got the gaming rig for my son's birthday. RTX 4070 build. He was streaming within an hour. Price was 15% less than any store in Chennai."</p>
-          <div class="rev-footer">
-            <div class="rev-author">Sundar P. · Chennai</div>
-            <div class="rev-verified">✓ Verified</div>
-          </div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-stars">★★★★★</div>
-          <p class="rev-quote">"I was skeptical ordering online but Suresh walked me through every part selection on WhatsApp. The finished build is stunning. Totally worth it."</p>
-          <div class="rev-footer">
-            <div class="rev-author">Arun V. · Hyderabad</div>
-            <div class="rev-verified">✓ Verified</div>
-          </div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-stars">★★★★★</div>
-          <p class="rev-quote">"3D workstation with RTX 4090. Houdini simulations that took 6 hours now finish in 40 minutes. Packaging was military-grade. Zero damage."</p>
-          <div class="rev-footer">
-            <div class="rev-author">Nisha T. · Mumbai</div>
-            <div class="rev-verified">✓ Verified</div>
-          </div>
-        </div>
-        <div class="rev-card">
-          <div class="rev-stars">★★★★★</div>
-          <p class="rev-quote">"Second build from Uniq Craft. First was in 2024, this one in 2026. Both flawless. They're the only custom PC builder I'll ever use."</p>
-          <div class="rev-footer">
-            <div class="rev-author">Dhruv M. · Coimbatore</div>
-            <div class="rev-verified">✓ Verified</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="trust-badges reveal">
-      <div class="t-badge"><span class="tb-icon">🛡️</span><span class="tb-text">2-Year Warranty</span></div>
-      <div class="t-badge"><span class="tb-icon">📦</span><span class="tb-text">Pan-India Delivery</span></div>
-      <div class="t-badge"><span class="tb-icon">🔧</span><span class="tb-text">Free Assembly</span></div>
-      <div class="t-badge"><span class="tb-icon">📋</span><span class="tb-text">GST Invoice</span></div>
-      <div class="t-badge"><span class="tb-icon">💬</span><span class="tb-text">WhatsApp Support</span></div>
-      <div class="t-badge"><span class="tb-icon">🏭</span><span class="tb-text">Madurai Workshop</span></div>
-    </div>
-  </section>
-
-  <!-- Section 10 - Brand Partners -->
-  <section id="brands" class="partners" style="padding: 120px 0; overflow: hidden; text-align: center;">
-    <div class="reveal" style="padding: 0 40px;">
-      <div class="tag">TRUSTED BY THE BEST</div>
-      <h2 class="section-title" style="margin-top: 20px;">Our Brand Partners</h2>
-    </div>
-    <div class="brands-marquee reveal">
-      <div class="brands-track">
-
-        <div class="brand-item"><span class="brand-logo brand-logo--nvidia">NVIDIA</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--intel">intel</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--amd">AMD</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--asusrog">ASUS ROG</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--nzxt">NZXT</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--corsair">CORSAIR</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--deepcool">DeepCool</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--gskill">G.SKILL</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--samsung">SAMSUNG</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--wd">WD</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--msi">msi</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--gigabyte">GIGABYTE</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--coolermaster">COOLER<br/>MASTER</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--lianli">LIAN LI</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--zotac">ZOTAC</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--crucial">crucial</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--seagate">SEAGATE</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--thermaltake">thermaltake</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--phanteks">PHANTEKS</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--bequiet">be quiet!</span></div>
-<!-- Duplicate set for seamless loop -->
-        <div class="brand-item"><span class="brand-logo brand-logo--nvidia">NVIDIA</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--intel">intel</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--amd">AMD</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--asusrog">ASUS ROG</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--nzxt">NZXT</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--corsair">CORSAIR</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--deepcool">DeepCool</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--gskill">G.SKILL</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--samsung">SAMSUNG</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--wd">WD</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--msi">msi</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--gigabyte">GIGABYTE</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--coolermaster">COOLER<br/>MASTER</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--lianli">LIAN LI</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--zotac">ZOTAC</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--crucial">crucial</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--seagate">SEAGATE</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--thermaltake">thermaltake</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--phanteks">PHANTEKS</span></div>
-        <div class="brand-item"><span class="brand-logo brand-logo--bequiet">be quiet!</span></div>
-
-</div>
-      </div>
-    </div>
-  </section>
 
   <!-- Section 11 - Sticky WhatsApp -->
   <a href="https://wa.me/919361599097?text=Hi!%20I%20want%20a%20custom%20PC%20build.%20Can%20you%20help?" class="sticky-wa hover-target" target="_blank">
@@ -1587,7 +1627,7 @@
       'Gaming': { gpu: 'RTX 4080', cpu: 'Intel i7-14700K', ram: '32GB DDR5', storage: '1TB NVMe Gen4', cooling: '360mm AIO Liquid', chassis: 'Full Tower Black' },
       'Streaming': { gpu: 'RTX 4080', cpu: 'Intel i9-14900K', ram: '64GB DDR5', storage: '2TB NVMe Gen5', cooling: '360mm AIO Liquid', chassis: 'Full Tower White' },
       '3D': { gpu: 'RTX 4090', cpu: 'Ryzen 9 7950X', ram: '128GB DDR5', storage: '4TB NVMe Gen5', cooling: '360mm AIO Liquid', chassis: 'Premium Glass Case' },
-      'Office': { gpu: 'RTX 4060', cpu: 'Intel i5-13400F', ram: '16GB DDR5', storage: '512GB NVMe Gen4', cooling: 'Air Cooler', chassis: 'Mid Tower Black' },
+      'Office': { gpu: 'Integrated Graphics', cpu: 'Intel i5-12400', ram: '16GB DDR5', storage: '512GB NVMe Gen4', cooling: 'Air Cooler', chassis: 'Mid Tower Black' },
       'Beast': { gpu: 'RTX 5090', cpu: 'Intel i9-14900K', ram: '128GB DDR5', storage: '4TB NVMe Gen5', cooling: '360mm AIO Liquid', chassis: 'Premium Glass Case' }
     };
 
@@ -1633,9 +1673,11 @@
         }
       });
       
+      const subtotal = basePrice + partsTotal;
+      linesHTML += `<div class="s-line" style="margin-top:10px; padding-top:10px; border-top:1px dashed rgba(255,255,255,0.1);"><span class="lbl">Subtotal</span><span class="val">${formatPrice(subtotal)}</span></div>`;
+      
       sumLines.innerHTML = linesHTML;
       
-      const subtotal = basePrice + partsTotal;
       const gst = Math.round(subtotal * 0.18);
       const grandTotal = subtotal + gst;
       
@@ -1643,7 +1685,7 @@
       sumTotal.innerText = formatPrice(grandTotal);
       
       // Generate WhatsApp message
-      const msg = `Hi! I want to order a custom PC build:\nGPU: ${selectedParts.gpu}\nCPU: ${selectedParts.cpu}\nRAM: ${selectedParts.ram}\nStorage: ${selectedParts.storage}\nCooling: ${selectedParts.cooling}\nCase: ${selectedParts.chassis}\nTotal: ${formatPrice(grandTotal)}\nPlease confirm.`;
+      const msg = `Hi! I want to order a custom PC:\n- GPU: ${selectedParts.gpu}\n- CPU: ${selectedParts.cpu}\n- RAM: ${selectedParts.ram}\n- Storage: ${selectedParts.storage}\n- Cooling: ${selectedParts.cooling}\n- Case: ${selectedParts.chassis}\nTotal: ${formatPrice(grandTotal)}`;
       btnOrderWa.href = `https://wa.me/919361599097?text=${encodeURIComponent(msg)}`;
     }
 
@@ -1665,6 +1707,24 @@
 
     partSelectors.forEach(radio => {
       radio.addEventListener('change', updateConfigurator);
+    });
+
+    // Initialize configurator on page load
+    updateConfigurator();
+
+    // Accordion Logic
+    const configSteps = document.querySelectorAll('.config-step');
+    configSteps.forEach(step => {
+      const header = step.querySelector('.step-header');
+      if (header) {
+        header.addEventListener('click', () => {
+          if (window.innerWidth <= 1024) {
+            const isOpen = step.classList.contains('open');
+            configSteps.forEach(s => s.classList.remove('open'));
+            if (!isOpen) step.classList.add('open');
+          }
+        });
+      }
     });
 
     // 6. Nav Active Section Highlighting
@@ -1693,10 +1753,15 @@
     const FRAME_PAD   = 3;
 
     const canvas = document.getElementById('pcCanvas');
-    const ctx = canvas ? canvas.getContext('2d') : null;
+    const ctx = canvas ? canvas.getContext('2d', { alpha: false }) : null;
     const loader = document.getElementById('loader');
     const loaderBar = document.getElementById('loaderBar');
     const loaderPct = document.getElementById('loaderPercent');
+
+    // Off-screen buffer for double-buffering (eliminates flicker)
+    const offscreen = document.createElement('canvas');
+    const offCtx = offscreen.getContext('2d', { alpha: false });
+    let lastDrawnImg = null; // Always hold the last good frame
 
     const frames1 = [];
     const frames2 = [];
@@ -1727,50 +1792,68 @@
       canvas.style.width  = canvasW + 'px';
       canvas.style.height = canvasH + 'px';
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      drawCurrentFrame();
+      offscreen.width  = canvas.width;
+      offscreen.height = canvas.height;
+      offCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // Redraw last known good frame after resize — no blank flash
+      if (lastDrawnImg) drawFrameToBuffer(lastDrawnImg);
+    }
+
+    function getScaleAndShift() {
+      let scaleFactor = 0.90;
+      let rightShift = 0;
+      if (currentState === 'PLAYING_2') {
+        if (!hasTransitioned && currentFrame < 35) {
+          const p = currentFrame / 35;
+          const easeP = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p;
+          scaleFactor = 0.90 - (0.20 * easeP);
+          rightShift = canvasW * 0.08 * easeP;
+        } else {
+          scaleFactor = 0.70;
+          rightShift = canvasW * 0.08;
+        }
+      }
+      return { scaleFactor, rightShift };
+    }
+
+    function drawFrameToBuffer(img) {
+      if (!offCtx || !img || !img.complete || !img.naturalWidth) return;
+      const { scaleFactor, rightShift } = getScaleAndShift();
+      const imgRatio = img.naturalWidth / img.naturalHeight;
+      const canvasRatio = canvasW / canvasH;
+      let drawW, drawH;
+      if (canvasRatio > imgRatio) {
+        drawH = canvasH * scaleFactor;
+        drawW = drawH * imgRatio;
+      } else {
+        drawW = canvasW * scaleFactor;
+        drawH = drawW / imgRatio;
+      }
+      const drawX = ((canvasW - drawW) / 2) + rightShift;
+      const drawY = ((canvasH - drawH) / 2) + (canvasH * 0.08);
+      // Draw to offscreen buffer first
+      offCtx.fillStyle = '#09090F';
+      offCtx.fillRect(0, 0, canvasW, canvasH);
+      offCtx.drawImage(img, drawX, drawY, drawW, drawH);
+      // Blit offscreen buffer to visible canvas in one atomic operation
+      ctx.drawImage(offscreen, 0, 0, canvasW, canvasH);
+      lastDrawnImg = img;
     }
 
     function drawCurrentFrame() {
-      if(!ctx) return;
+      if (!ctx) return;
       let img = null;
       if (currentState === 'PLAYING_1' || currentState === 'LOADING') {
-          img = frames1[currentFrame];
+        img = frames1[currentFrame];
       } else {
-          img = frames2[currentFrame];
+        img = frames2[currentFrame];
       }
-      if (!img || !img.complete) return;
-      ctx.fillStyle = "#000";
-      ctx.fillRect(0, 0, canvasW, canvasH);
-      const imgRatio = img.naturalWidth / img.naturalHeight;
-      const canvasRatio = canvasW / canvasH;
-      let drawW, drawH, drawX, drawY;
-      let scaleFactor = 0.70;
-      let rightShift = canvasW * 0.08; // Keep it closer to text to create overlay
-      
-      // Zoom and transition logic
-      if (currentState === 'PLAYING_1' || currentState === 'LOADING') {
-         scaleFactor = 0.90;
-         rightShift = 0; // Centered
-      } else if (currentState === 'PLAYING_2') {
-         if (!hasTransitioned && currentFrame < 35) {
-             const p = currentFrame / 35; 
-             const easeP = p < 0.5 ? 2 * p * p : -1 + (4 - 2 * p) * p; // Ease-in-out
-             scaleFactor = 0.90 - (0.20 * easeP);
-             rightShift = 0 + (canvasW * 0.08 * easeP);
-         }
+      // If this frame isn't ready yet, hold the last good frame — no black flash
+      if (!img || !img.complete || !img.naturalWidth) {
+        if (lastDrawnImg) drawFrameToBuffer(lastDrawnImg);
+        return;
       }
-      
-      // Zoom calculation:
-      if (canvasRatio > imgRatio) {
-        drawH = canvasH * scaleFactor; 
-        drawW = drawH * imgRatio;
-      } else {
-        drawW = canvasW * scaleFactor; 
-        drawH = drawW / imgRatio;
-      }
-      drawX = ((canvasW - drawW) / 2) + rightShift;
-      drawY = ((canvasH - drawH) / 2) + (canvasH * 0.08); // Shift down to avoid header clip
-      ctx.drawImage(img, drawX, drawY, drawW, drawH);
+      drawFrameToBuffer(img);
     }
 
     function preloadImages() {
